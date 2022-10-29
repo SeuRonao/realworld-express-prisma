@@ -18,7 +18,8 @@ model User {
   image      String? ///Link to the user avatar.
   follows    User[]    @relation("UserFollows") ///List of other users that this one follows.
   followedBy User[]    @relation("UserFollows") ///List of other users that follows this one.
-  Article    Article[]
+  article    Article[] @relation("Author")
+  favorites  Article[] @relation("Favorites")
 }
 
 model Article {
@@ -27,11 +28,11 @@ model Article {
   description    String
   body           String
   tags           Tag[]
-  author         User     @relation(fields: [authorUsername], references: [username])
-  usename        String
+  author         User     @relation("Author", fields: [authorUsername], references: [username])
+  authorUsername String
+  favoritedBy    User[]   @relation("Favorites")
   createdAt      DateTime @default(now())
   updatedAt      DateTime @default(now())
-  authorUsername String
 }
 
 model Tag {
