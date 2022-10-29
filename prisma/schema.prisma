@@ -11,11 +11,30 @@ datasource db {
 }
 
 model User {
-  email      String  @unique ///User email for registering and login use.
-  username   String  @id ///User internal id.
+  email      String    @unique ///User email for registering and login use.
+  username   String    @id ///User internal id.
   password   String ///User password stored in the database.
   bio        String? ///User biographical information.
   image      String? ///Link to the user avatar.
-  follows    User[]  @relation("UserFollows") ///List of other users that this one follows.
-  followedBy User[]  @relation("UserFollows") ///List of other users that follows this one.
+  follows    User[]    @relation("UserFollows") ///List of other users that this one follows.
+  followedBy User[]    @relation("UserFollows") ///List of other users that follows this one.
+  Article    Article[]
+}
+
+model Article {
+  title          String   @unique
+  slug           String   @id
+  description    String
+  body           String
+  tags           Tag[]
+  author         User     @relation(fields: [authorUsername], references: [username])
+  usename        String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now())
+  authorUsername String
+}
+
+model Tag {
+  tag     String    @id
+  article Article[]
 }
