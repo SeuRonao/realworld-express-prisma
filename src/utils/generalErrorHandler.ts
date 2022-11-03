@@ -1,3 +1,4 @@
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { NextFunction, Request, Response } from "express";
 import { UnauthorizedError } from "express-jwt";
 import logger from "./logger";
@@ -28,16 +29,25 @@ export default function generalErrorHandler(
           .json({ errors: { header: ["authorization token is invalid"] } });
       default:
         logger.error(`Unhandled UnauthorizedError with code ${err.code}`);
-        return next(err);
+        return res.sendStatus(500);
+    }
+  } else if (err instanceof PrismaClientKnownRequestError) {
+    logger.debug(
+      `Unhandled PrismaClientKnownRequestError with code ${err.code} in generalErrorHandler`
+    );
+    return res.sendStatus(500);
+  } else {
+    // Se if body is not a valid JSON parse.
+    try {
+      JSON.parse(req.body);
+    } catch (error) {
+      if (error instanceof Error) console.log(error.message);
+      logger.debug("Body is not a valid JSON.");
+      return res.status(422).json({ errors: { body: ["not a valid json"] } });
     }
   }
-  // Se if body is not a valid JSON parse.
-  try {
-    JSON.parse(req.body);
-  } catch (error) {
-    logger.debug("Body is not a valid JSON.");
-    return res.status(422).json({ errors: { body: ["not a valid json"] } });
-  }
-  logger.error(`Unhandled error ${err.name}`);
-  return next(err);
+
+  // This is an unknown type of error.
+  logger.error(`Unhandled error ${err.name} in generalErrorHandler`);
+  return res.sendStatus(500);
 }

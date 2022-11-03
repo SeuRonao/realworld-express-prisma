@@ -27,7 +27,7 @@ model Article {
   slug           String   @id
   description    String
   body           String
-  tags           Tag[]
+  tagList        Tag[]
   author         User     @relation("Author", fields: [authorUsername], references: [username])
   authorUsername String
   favoritedBy    User[]   @relation("Favorites")
@@ -36,6 +36,6 @@ model Article {
 }
 
 model Tag {
-  tag     String    @id
+  tagName String    @id
   article Article[]
 }
