@@ -4,7 +4,7 @@ import userRouter from "./routes/api/user";
 import profilesRouter from "./routes/api/profiles";
 import articlesRouter from "./routes/api/articles";
 import tagsRouter from "./routes/api/tags";
-import generalErrorHandler from "./utils/generalErrorHandler";
+import generalErrorHandler from "./middleware/errorHandling/generalErrorHandler";
 
 const app = express();
 

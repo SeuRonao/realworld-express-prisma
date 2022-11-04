@@ -1,3 +1,9 @@
 {
-  "cSpell.words": ["expressjwt", "realworld"]
+  "cSpell.words": [
+    "codepaths",
+    "expressjwt",
+    "realworld",
+    "slugfy",
+    "tsbuildinfo"
+  ]
 }

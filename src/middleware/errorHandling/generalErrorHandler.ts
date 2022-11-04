@@ -1,16 +1,15 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { NextFunction, Request, Response } from "express";
 import { UnauthorizedError } from "express-jwt";
-import logger from "./logger";
+import logger from "../../utils/logger";
 
 export default function generalErrorHandler(
   err: Error,
   req: Request,
   res: Response,
-  next: NextFunction
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _next: NextFunction
 ) {
-  logger.debug("Starting - generalErrorHandler");
-  logger.debug(`Handling error ${err.name}`);
   // Se if authorization failed
   if (err instanceof UnauthorizedError) {
     switch (err.code) {
@@ -32,7 +31,7 @@ export default function generalErrorHandler(
         return res.sendStatus(500);
     }
   } else if (err instanceof PrismaClientKnownRequestError) {
-    logger.debug(
+    logger.error(
       `Unhandled PrismaClientKnownRequestError with code ${err.code} in generalErrorHandler`
     );
     return res.sendStatus(500);

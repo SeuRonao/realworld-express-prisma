@@ -1,9 +1,8 @@
 import { Tag } from "@prisma/client";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { NextFunction, Response } from "express";
-import { Request as JWTRequest } from "express-jwt";
-import prisma from "../../utils/db/prisma";
-import logger from "../../utils/logger";
+import { Request as JWTRequest, UnauthorizedError } from "express-jwt";
+import articleCreatePrisma from "../../utils/db/articleCreatePrisma";
+import tagsCreatePrisma from "../../utils/db/tagsCreatePrisma";
 
 interface Article {
   title: string;
@@ -18,60 +17,40 @@ export default async function articlesCreate(
   next: NextFunction
 ) {
   const { title, description, body, tagList }: Article = req.body.article;
-  const slug = (title as string)
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .trim()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/[\s_-]+/g, "-")
-    .replace(/^-+|-+$/g, "");
   const user = req.auth?.user;
-  try {
-    // Creating the tags for this article if they do not exist.
-    const tags: Array<Tag> = [];
-    if (tagList) {
-      for (const tagName of tagList) {
-        tags.push(
-          await prisma.tag.upsert({
-            create: { tagName },
-            where: { tagName },
-            update: {},
-          })
-        );
-      }
+  if (!user) {
+    next(
+      new UnauthorizedError(
+        "credentials_required",
+        new Error("user not authenticated")
+      )
+    );
+  }
+  if (!user.username) {
+    next(
+      new UnauthorizedError(
+        "credentials_bad_scheme",
+        new Error("username not in the token")
+      )
+    );
+  }
+
+  let tags: Tag[] = [];
+  if (tagList && tagList.length > 0) {
+    try {
+      tags = await tagsCreatePrisma(tagList);
+    } catch (error) {
+      next(error);
     }
-    // Creating the article with the current user as author.
-    const article = await prisma.article.create({
-      data: {
-        slug,
-        title,
-        description,
-        body,
-        authorUsername: user.username,
-        tagList: { connect: tags },
-      },
-      include: { tagList: true },
-    });
+  }
+  try {
+    const article = await articleCreatePrisma(
+      { title, description, body },
+      tags,
+      user.username
+    );
     return res.status(201).json(article);
   } catch (error) {
-    if (error instanceof PrismaClientKnownRequestError) {
-      switch (error.code) {
-        case "P2002":
-          logger.debug(
-            `Article with ${error.meta?.target} already exists in database`
-          );
-          return res.status(422).json({
-            errors: {
-              body: [`article with ${error.meta?.target} already exists`],
-            },
-          });
-        default:
-          logger.error(
-            `Unhandled PrismaClientKnownRequestError with code ${error.code} in articlesCreate`
-          );
-          next(error);
-      }
-    }
+    next(error);
   }
 }

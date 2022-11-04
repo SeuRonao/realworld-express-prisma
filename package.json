@@ -5,7 +5,7 @@
   "main": "dist/src/server.js",
   "scripts": {
     "build": "npx tsc",
-    "develop": "npx ts-node-dev --rs --clear --exit-child src/server.ts",
+    "develop": "DEBUG=express:* npx ts-node-dev --rs --clear --exit-child src/server.ts",
     "start": "node dist/src/server.js",
     "lint": "npx eslint .",
     "style": "npx prettier --check .",
