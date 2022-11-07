@@ -34,7 +34,7 @@ export default async function articlesCreate(
       tags,
       user.username
     );
-    const articleView = await articleViewer(article, user.username);
+    const articleView = articleViewer(article, user.username);
     return res.status(201).json(articleView);
   } catch (error) {
     return next(error);

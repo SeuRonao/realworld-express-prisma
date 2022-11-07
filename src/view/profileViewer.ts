@@ -1,21 +1,24 @@
 import { User } from "@prisma/client";
-import prisma from "../utils/db/prisma";
 
-export default async function profileViewer(user: User, userName?: string) {
-  let follows = null;
-  if (userName) {
-    follows = await prisma.user.findFirst({
-      where: {
-        username: userName,
-        follows: { some: { username: user.username } },
-      },
-    });
-  }
+type UserWithFollow = User & { follows: User[] };
+
+export default function profileViewer(
+  user: User,
+  currentUser?: UserWithFollow
+) {
+  let follows = false;
+  if (
+    currentUser &&
+    currentUser.follows.find(
+      (userFollowed) => userFollowed.username == user.username
+    )
+  )
+    follows = true;
   const userView = {
     username: user.username,
     bio: user.bio,
     image: user.image,
-    following: follows ? true : false,
+    following: follows,
   };
   return userView;
 }
