@@ -5,6 +5,10 @@ import profilesRouter from "./routes/api/profiles";
 import articlesRouter from "./routes/api/articles";
 import tagsRouter from "./routes/api/tags";
 import generalErrorHandler from "./middleware/errorHandling/generalErrorHandler";
+import {
+  authErrorHandler,
+  prismaErrorHandler,
+} from "./middleware/errorHandling";
 
 const app = express();
 
@@ -21,6 +25,6 @@ app.use("/api/articles", articlesRouter);
 
 app.use("/api/tags", tagsRouter);
 
-app.use(generalErrorHandler);
+app.use(authErrorHandler, prismaErrorHandler, generalErrorHandler);
 
 export default app;

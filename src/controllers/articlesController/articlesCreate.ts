@@ -49,7 +49,9 @@ export default async function articlesCreate(
       tags,
       user.username
     );
-    return res.status(201).json(article);
+    const tagList = article.tagList.map((tag) => tag.tagName);
+    const response = { ...article, tagList };
+    return res.status(201).json(response);
   } catch (error) {
     next(error);
   }
