@@ -10,22 +10,30 @@ export default async function articlesUpdate(
   next: NextFunction
 ) {
   const slug = req.params.slug;
-  const userName = req.auth?.user.username;
   const { title, description, body } = req.body.article;
+  const userName = req.auth?.user.username;
+
+  // Get current user
+  let currentUser;
   try {
-    const currentUser =
-      (await userGetPrisma(userName, {
-        following: true,
-        favorites: true,
-      })) || undefined;
-    const article = await articleUpdatePrisma(slug, {
+    currentUser = await userGetPrisma(userName);
+  } catch (error) {
+    return next(error);
+  }
+
+  // Update the article
+  let article;
+  try {
+    article = await articleUpdatePrisma(slug, {
       title,
       description,
       body,
     });
-    const articleView = articleViewer(article, currentUser);
-    return res.status(200).json(articleView);
   } catch (error) {
-    next(error);
+    return next(error);
   }
+
+  // Create the article view
+  const articleView = articleViewer(article, currentUser || undefined);
+  return res.status(200).json(articleView);
 }

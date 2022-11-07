@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   articlesCreate,
+  articlesDelete,
   articlesGet,
   articlesUpdate,
 } from "../../controllers/articlesController";
@@ -29,9 +30,7 @@ router.post("/", authenticate, articlesCreateValidator, articlesCreate);
 
 router.put("/:slug", authenticate, articlesUpdateValidator, articlesUpdate);
 
-router.delete("/:slug", function (_req, res) {
-  res.sendStatus(501);
-});
+router.delete("/:slug", authenticate, articlesDelete);
 
 router.post("/:slug/comments", function (_req, res) {
   res.sendStatus(501);

@@ -1,24 +1,14 @@
 import prisma from "./prisma";
 
-interface Includes {
-  followers?: boolean;
-  following?: boolean;
-  authorship?: boolean;
-  favorites?: boolean;
-}
-
-export default async function userGetPrisma(
-  username: string,
-  include?: Includes
-) {
+export default async function userGetPrisma(username: string) {
   if (!username) return null;
   const user = await prisma.user.findUnique({
     where: { username },
     include: {
-      article: include?.authorship || false,
-      followedBy: include?.followers || false,
-      follows: include?.following || false,
-      favorites: include?.favorites || false,
+      follows: true,
+      followedBy: true,
+      authored: true,
+      favorites: true,
     },
   });
   return user;

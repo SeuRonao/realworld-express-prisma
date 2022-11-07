@@ -18,7 +18,7 @@ model User {
   image      String? ///Link to the user avatar.
   follows    User[]    @relation("UserFollows") ///List of other users that this one follows.
   followedBy User[]    @relation("UserFollows") ///List of other users that follows this one.
-  article    Article[] @relation("Author")
+  authored   Article[] @relation("Author")
   favorites  Article[] @relation("Favorites")
 }
 

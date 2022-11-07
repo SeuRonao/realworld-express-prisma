@@ -20,15 +20,17 @@ export default async function articlesCreate(
 ) {
   const { title, description, body, tagList }: Article = req.body.article;
   const userName = req.auth?.user.username;
+
+  // Get current user
   let currentUser;
   try {
-    currentUser = await userGetPrisma(userName, { favorites: true });
-    if (!currentUser)
-      throw new Error(`User ${userName} does not exist on the database`);
+    currentUser = await userGetPrisma(userName);
+    if (!currentUser) return res.sendStatus(401);
   } catch (error) {
     return next(error);
   }
 
+  // Create list of tags
   let tags: Tag[] = [];
   if (tagList && tagList.length > 0) {
     try {
@@ -37,15 +39,20 @@ export default async function articlesCreate(
       return next(error);
     }
   }
+
+  // Create the article
+  let article;
   try {
-    const article = await articleCreatePrisma(
+    article = await articleCreatePrisma(
       { title, description, body },
       tags,
       currentUser.username
     );
-    const articleView = articleViewer(article, currentUser);
-    return res.status(201).json(articleView);
   } catch (error) {
     return next(error);
   }
+
+  // Create article view
+  const articleView = articleViewer(article, currentUser || undefined);
+  return res.status(201).json(articleView);
 }
