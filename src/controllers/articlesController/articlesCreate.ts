@@ -3,6 +3,7 @@ import { NextFunction, Response } from "express";
 import { Request as JWTRequest } from "express-jwt";
 import articleCreatePrisma from "../../utils/db/articleCreatePrisma";
 import tagsCreatePrisma from "../../utils/db/tagsCreatePrisma";
+import userGetPrisma from "../../utils/db/userGetPrisma";
 import articleViewer from "../../view/articleViewer";
 
 interface Article {
@@ -18,7 +19,15 @@ export default async function articlesCreate(
   next: NextFunction
 ) {
   const { title, description, body, tagList }: Article = req.body.article;
-  const user = req.auth?.user;
+  const userName = req.auth?.user.username;
+  let currentUser;
+  try {
+    currentUser = await userGetPrisma(userName, { favorites: true });
+    if (!currentUser)
+      throw new Error(`User ${userName} does not exist on the database`);
+  } catch (error) {
+    return next(error);
+  }
 
   let tags: Tag[] = [];
   if (tagList && tagList.length > 0) {
@@ -32,9 +41,9 @@ export default async function articlesCreate(
     const article = await articleCreatePrisma(
       { title, description, body },
       tags,
-      user.username
+      currentUser.username
     );
-    const articleView = articleViewer(article, user.username);
+    const articleView = articleViewer(article, currentUser);
     return res.status(201).json(articleView);
   } catch (error) {
     return next(error);

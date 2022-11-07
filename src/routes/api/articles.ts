@@ -2,8 +2,12 @@ import { Router } from "express";
 import {
   articlesCreate,
   articlesGet,
+  articlesUpdate,
 } from "../../controllers/articlesController";
-import { articlesCreateValidator } from "../../middleware/articlesValidator";
+import {
+  articlesCreateValidator,
+  articlesUpdateValidator,
+} from "../../middleware/articlesValidator";
 import {
   authenticate,
   optionalAuthenticate,
@@ -23,9 +27,7 @@ router.get("/:slug", optionalAuthenticate, articlesGet);
 
 router.post("/", authenticate, articlesCreateValidator, articlesCreate);
 
-router.put("/:slug", function (_req, res) {
-  res.sendStatus(501);
-});
+router.put("/:slug", authenticate, articlesUpdateValidator, articlesUpdate);
 
 router.delete("/:slug", function (_req, res) {
   res.sendStatus(501);

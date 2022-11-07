@@ -21,7 +21,11 @@ export default async function articleCreatePrisma(
       authorUsername,
       tagList: { connect: tagList },
     },
-    include: { author: true, tagList: true },
+    include: {
+      author: true,
+      tagList: true,
+      _count: { select: { favoritedBy: true } },
+    },
   });
   return article;
 }

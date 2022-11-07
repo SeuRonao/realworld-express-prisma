@@ -6,6 +6,7 @@ export default async function articleGetPrisma(slug: string) {
     include: {
       author: true,
       tagList: true,
+      _count: { select: { favoritedBy: true } },
     },
   });
   return article;

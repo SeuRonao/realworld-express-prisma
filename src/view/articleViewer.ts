@@ -1,14 +1,19 @@
 import { Article, Tag, User } from "@prisma/client";
 import profileViewer from "./profileViewer";
 
-type FullArticle = Article & { tagList: Tag[]; author: User };
+type FullArticle = Article & {
+  tagList: Tag[];
+  author: User;
+  _count: { favoritedBy: number };
+};
 
 export default function articleViewer(
   article: FullArticle,
-  currentUser?: User & { follows: User[] },
-  favorited?: boolean,
-  favoritesCount?: number
+  currentUser?: User & { follows: User[]; favorites: Article[] }
 ) {
+  const favorited =
+    currentUser?.favorites.find((value) => value.slug == article.slug) && true;
+
   const tagListView = article.tagList.map((tag) => tag.tagName);
 
   const authorView = profileViewer(article.author, currentUser);
@@ -22,7 +27,7 @@ export default function articleViewer(
     createdAt: article.createdAt,
     updatedAt: article.updatedAt,
     favorited: favorited ? true : false,
-    favoritesCount: favoritesCount ? favoritesCount : 0,
+    favoritesCount: article._count.favoritedBy,
     author: authorView,
   };
   return articleView;

@@ -9,16 +9,16 @@ interface Includes {
 
 export default async function userGetPrisma(
   username: string,
-  include: Includes
+  include?: Includes
 ) {
   if (!username) return null;
   const user = await prisma.user.findUnique({
     where: { username },
     include: {
-      article: include.authorship || false,
-      followedBy: include.followers || false,
-      follows: include.following || false,
-      favorites: include.favorites || false,
+      article: include?.authorship || false,
+      followedBy: include?.followers || false,
+      follows: include?.following || false,
+      favorites: include?.favorites || false,
     },
   });
   return user;
