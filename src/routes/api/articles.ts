@@ -1,7 +1,13 @@
 import { Router } from "express";
-import { articlesCreate } from "../../controllers/articlesController";
+import {
+  articlesCreate,
+  articlesGet,
+} from "../../controllers/articlesController";
 import { articlesCreateValidator } from "../../middleware/articlesValidator";
-import { authenticate } from "../../middleware/auth/authenticator";
+import {
+  authenticate,
+  optionalAuthenticate,
+} from "../../middleware/auth/authenticator";
 
 const router = Router();
 
@@ -13,9 +19,7 @@ router.get("/feed", function (_req, res) {
   res.sendStatus(501);
 });
 
-router.get("/:slug", function (_req, res) {
-  res.sendStatus(501);
-});
+router.get("/:slug", optionalAuthenticate, articlesGet);
 
 router.post("/", authenticate, articlesCreateValidator, articlesCreate);
 

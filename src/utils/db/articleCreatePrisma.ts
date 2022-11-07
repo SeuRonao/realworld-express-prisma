@@ -21,7 +21,7 @@ export default async function articleCreatePrisma(
       authorUsername,
       tagList: { connect: tagList },
     },
-    include: { tagList: true },
+    include: { author: true, tagList: true },
   });
   return article;
 }

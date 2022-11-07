@@ -3,6 +3,7 @@ import { NextFunction, Response } from "express";
 import { Request as JWTRequest } from "express-jwt";
 import articleCreatePrisma from "../../utils/db/articleCreatePrisma";
 import tagsCreatePrisma from "../../utils/db/tagsCreatePrisma";
+import articleViewer from "../../view/articleViewer";
 
 interface Article {
   title: string;
@@ -33,9 +34,8 @@ export default async function articlesCreate(
       tags,
       user.username
     );
-    const tagList = article.tagList.map((tag) => tag.tagName);
-    const response = { ...article, tagList };
-    return res.status(201).json(response);
+    const articleView = await articleViewer(article, user.username);
+    return res.status(201).json(articleView);
   } catch (error) {
     return next(error);
   }
