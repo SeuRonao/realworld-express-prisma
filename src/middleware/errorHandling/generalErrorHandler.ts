@@ -10,5 +10,6 @@ export default function generalErrorHandler(
 ) {
   // This is an unknown type of error.
   logger.error(`Unhandled error in generalErrorHandler`);
+  logger.error(`${err.message}`);
   return res.sendStatus(500);
 }
