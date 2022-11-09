@@ -19,6 +19,7 @@ export default async function articlesDelete(
   } catch (error) {
     return next(error);
   }
+  if (!currentUser) return res.sendStatus(401);
 
   // Delete the article
   let article;
@@ -29,6 +30,6 @@ export default async function articlesDelete(
   }
 
   // Create the deleted article view
-  const articleView = articleViewer(article, currentUser || undefined);
+  const articleView = articleViewer(article, currentUser);
   return res.status(200).json(articleView);
 }

@@ -20,6 +20,7 @@ export default async function articlesUpdate(
   } catch (error) {
     return next(error);
   }
+  if (!currentUser) return res.sendStatus(401);
 
   // Update the article
   let article;
@@ -34,6 +35,6 @@ export default async function articlesUpdate(
   }
 
   // Create the article view
-  const articleView = articleViewer(article, currentUser || undefined);
+  const articleView = articleViewer(article, currentUser);
   return res.status(200).json(articleView);
 }
