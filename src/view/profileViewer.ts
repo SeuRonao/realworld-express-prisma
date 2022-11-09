@@ -1,19 +1,16 @@
 import { User } from "@prisma/client";
 
-type UserWithFollow = User & { follows: User[] };
+type UserWithFollow = User & { followedBy: User[] };
 
 export default function profileViewer(
-  user: User,
-  currentUser?: UserWithFollow
+  user: UserWithFollow,
+  currentUser?: User
 ) {
-  let follows = false;
-  if (
-    currentUser &&
-    currentUser.follows.find(
-      (userFollowed) => userFollowed.username == user.username
-    )
-  )
-    follows = true;
+  const follows = currentUser
+    ? Boolean(
+        user.followedBy.find((value) => value.username == currentUser.username)
+      )
+    : false;
   const userView = {
     username: user.username,
     bio: user.bio,

@@ -22,7 +22,7 @@ export default async function articleCreatePrisma(
       tagList: { connect: tagList },
     },
     include: {
-      author: true,
+      author: { include: { followedBy: true } },
       tagList: true,
       _count: { select: { favoritedBy: true } },
     },

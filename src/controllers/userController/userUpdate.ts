@@ -1,6 +1,6 @@
 import { NextFunction, Response } from "express";
 import { Request } from "express-jwt";
-import { createToken } from "../../utils/auth";
+import createUserToken from "../../utils/auth/createUserToken";
 import userUpdatePrisma from "../../utils/db/userUpdatePrisma";
 import userViewer from "../../view/userViewer";
 
@@ -16,7 +16,7 @@ export default async function userUpdate(
   res: Response,
   next: NextFunction
 ) {
-  const { username } = req.auth && req.auth.user;
+  const username = req.auth?.user.username;
   const info = req.body.user;
   let user;
   try {
@@ -25,7 +25,8 @@ export default async function userUpdate(
     return next(error);
   }
   if (!user) return res.sendStatus(404);
-  const token = createToken(JSON.stringify({ user }));
+
+  const token = createUserToken(user);
   const userView = userViewer(user, token);
   return res.json(userView);
 }

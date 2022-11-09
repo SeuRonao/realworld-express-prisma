@@ -20,7 +20,7 @@ export default async function articleUpdatePrisma(
       updatedAt: new Date(),
     },
     include: {
-      author: true,
+      author: { include: { followedBy: true } },
       tagList: true,
       _count: { select: { favoritedBy: true } },
     },

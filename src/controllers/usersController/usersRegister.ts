@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { createToken } from "../../utils/auth";
+import createUserToken from "../../utils/auth/createUserToken";
 import userCreatePrisma from "../../utils/db/userCreatePrisma";
 import userViewer from "../../view/userViewer";
 
@@ -22,7 +22,7 @@ export default async function usersRegister(
   } catch (error) {
     return next(error);
   }
-  const token = createToken(JSON.stringify({ user }));
+  const token = createUserToken(user);
   const userView = userViewer(user, token);
   return res.status(201).json(userView);
 }

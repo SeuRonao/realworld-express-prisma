@@ -3,13 +3,13 @@ import profileViewer from "./profileViewer";
 
 type FullArticle = Article & {
   tagList: Tag[];
-  author: User;
+  author: User & { followedBy: User[] };
   _count: { favoritedBy: number };
 };
 
 export default function articleViewer(
   article: FullArticle,
-  currentUser?: User & { follows: User[]; favorites: Article[] }
+  currentUser?: User & { favorites: Article[] }
 ) {
   const favorited =
     currentUser?.favorites.find((value) => value.slug == article.slug) && true;

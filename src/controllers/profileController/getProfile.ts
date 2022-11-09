@@ -24,7 +24,6 @@ export default async function getProfile(
   } catch (error) {
     return next(error);
   }
-  if (!currentUser) return res.sendStatus(401);
 
   let profile;
   try {
@@ -34,7 +33,7 @@ export default async function getProfile(
   }
   if (!profile) return res.sendStatus(404);
 
-  const profileView = profileViewer(profile, currentUser);
+  const profileView = profileViewer(profile, currentUser || undefined);
 
   return res.json(profileView);
 }

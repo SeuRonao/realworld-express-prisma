@@ -1,6 +1,6 @@
 import { NextFunction, Response } from "express";
 import { Request } from "express-jwt";
-import { createToken } from "../../utils/auth";
+import createUserToken from "../../utils/auth/createUserToken";
 import userGetPrisma from "../../utils/db/userGetPrisma";
 import userViewer from "../../view/userViewer";
 
@@ -16,7 +16,7 @@ export default async function userGet(
   res: Response,
   next: NextFunction
 ) {
-  const { username } = req.auth && req.auth.user;
+  const username = req.auth?.user.username;
   let currentUser;
   try {
     currentUser = await userGetPrisma(username);
@@ -24,7 +24,8 @@ export default async function userGet(
     return next(error);
   }
   if (!currentUser) return res.sendStatus(404);
-  const token = createToken(JSON.stringify({ currentUser }));
+
+  const token = createUserToken(currentUser);
   const response = userViewer(currentUser, token);
   return res.json(response);
 }

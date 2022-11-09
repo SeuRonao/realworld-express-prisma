@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { createToken } from "../../utils/auth";
+import createUserToken from "../../utils/auth/createUserToken";
 import userGetEmailPrisma from "../../utils/db/userGetEmailPrisma";
 import userViewer from "../../view/userViewer";
 
@@ -23,7 +23,7 @@ export default async function userLogin(
   if (!user) return res.sendStatus(404);
   if (user.password != password) return res.sendStatus(403);
 
-  const token = createToken(JSON.stringify({ user }));
+  const token = createUserToken(user);
   const userView = userViewer(user, token);
   return res.json(userView);
 }

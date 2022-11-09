@@ -2,12 +2,13 @@ import { User } from "@prisma/client";
 import prisma from "./prisma";
 
 export default async function userUnFollowProfilePrisma(
-  user: User,
+  currentUser: User,
   unFollowUsername: string
 ) {
   const follows = await prisma.user.update({
     where: { username: unFollowUsername },
-    data: { followedBy: { disconnect: { username: user.username } } },
+    data: { followedBy: { disconnect: { username: currentUser.username } } },
+    include: { followedBy: { where: { username: currentUser.username } } },
   });
   return follows;
 }

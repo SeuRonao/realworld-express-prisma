@@ -27,13 +27,13 @@ export default async function unFollowProfile(
   }
   if (!currentUser) return res.sendStatus(401);
 
-  let user;
+  let profile;
   try {
-    user = await userUnFollowProfilePrisma(currentUser, username);
+    profile = await userUnFollowProfilePrisma(currentUser, username);
   } catch (error) {
     return next(error);
   }
 
-  const profileView = profileViewer(user, currentUser);
+  const profileView = profileViewer(profile, currentUser);
   return res.json(profileView);
 }

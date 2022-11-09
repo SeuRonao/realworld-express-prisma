@@ -1,1 +1,1 @@
-export { default as createToken } from "./createToken";
+export { default as createToken } from "./createUserToken";
