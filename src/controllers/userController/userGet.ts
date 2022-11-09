@@ -1,5 +1,5 @@
 import { NextFunction, Response } from "express";
-import { Request as JWTRequest } from "express-jwt";
+import { Request } from "express-jwt";
 import { createToken } from "../../utils/auth";
 import userGetPrisma from "../../utils/db/userGetPrisma";
 import userViewer from "../../view/userViewer";
@@ -12,7 +12,7 @@ import userViewer from "../../view/userViewer";
  * @returns
  */
 export default async function userGet(
-  req: JWTRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ) {
