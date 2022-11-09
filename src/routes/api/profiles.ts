@@ -1,20 +1,13 @@
 import { Router } from "express";
-import {
-  followProfile,
-  getProfile,
-  unFollowProfile,
-} from "../../controllers/profileController";
-import {
-  authenticate,
-  optionalAuthenticate,
-} from "../../middleware/auth/authenticator";
+import * as profile from "../../controllers/profileController";
+import * as auth from "../../middleware/auth/authenticator";
 
 const router = Router();
 
-router.get("/:username", optionalAuthenticate, getProfile);
+router.get("/:username", auth.optionalAuthenticate, profile.getProfile);
 
-router.post("/:username/follow", authenticate, followProfile);
+router.post("/:username/follow", auth.authenticate, profile.followProfile);
 
-router.delete("/:username/follow", authenticate, unFollowProfile);
+router.delete("/:username/follow", auth.authenticate, profile.unFollowProfile);
 
 export default router;
