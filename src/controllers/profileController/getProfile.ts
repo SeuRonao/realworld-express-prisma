@@ -1,9 +1,6 @@
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { NextFunction, Response } from "express";
 import { Request as JWTRequest } from "express-jwt";
-import prisma from "../../utils/db/prisma";
 import userGetPrisma from "../../utils/db/userGetPrisma";
-import logger from "../../utils/logger";
 import profileViewer from "../../view/profileViewer";
 
 /**
