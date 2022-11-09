@@ -1,8 +1,8 @@
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { NextFunction, Response } from "express";
-import { Request as JWTRequest } from "express-jwt";
-import prisma from "../../utils/db/prisma";
-import logger from "../../utils/logger";
+import { Request } from "express-jwt";
+import userGetPrisma from "../../utils/db/userGetPrisma";
+import userUnFollowProfilePrisma from "../../utils/db/userUnFollowProfilePrisma";
+import profileViewer from "../../view/profileViewer";
 
 /**
  * Middleware that removes the username in the parameters to the current user followers list.
@@ -12,33 +12,28 @@ import logger from "../../utils/logger";
  * @returns
  */
 export default async function unFollowProfile(
-  req: JWTRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ) {
-  logger.debug("Starting - unFollowProfile");
   const username = req.params.username;
   const currentUsername = req.auth?.user.username;
-  if (!username)
-    return res
-      .status(422)
-      .json({ errors: { parameters: ["username can't be empty"] } });
+
+  let currentUser;
   try {
-    const followedUser = await prisma.user.update({
-      where: { username },
-      data: { followedBy: { disconnect: { username: currentUsername } } },
-    });
-    const responseBody = { ...followedUser, following: false };
-    return res.json(responseBody);
+    currentUser = await userGetPrisma(currentUsername);
   } catch (error) {
-    if (error instanceof PrismaClientKnownRequestError) {
-      switch (error.code) {
-        default:
-          logger.error(
-            `Unhandled PrismaClientKnownRequestError with code ${error.code} in followProfile`
-          );
-          return next(error);
-      }
-    }
+    return next(error);
   }
+  if (!currentUser) return res.sendStatus(401);
+
+  let user;
+  try {
+    user = await userUnFollowProfilePrisma(currentUser, username);
+  } catch (error) {
+    return next(error);
+  }
+
+  const profileView = profileViewer(user, currentUser);
+  return res.json(profileView);
 }
