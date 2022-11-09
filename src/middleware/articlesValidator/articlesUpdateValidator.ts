@@ -1,9 +1,6 @@
 import { NextFunction, Response } from "express";
 import { Request } from "express-jwt";
-
-interface ValidationError {
-  body?: Array<string>;
-}
+import { ValidationError } from "../../utils/types";
 
 export default async function articlesUpdateValidator(
   req: Request,

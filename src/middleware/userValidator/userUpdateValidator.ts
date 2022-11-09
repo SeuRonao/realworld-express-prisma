@@ -1,9 +1,6 @@
 import { NextFunction, Response } from "express";
 import { Request } from "express-jwt";
-
-interface ValidationError {
-  body?: Array<string>;
-}
+import { ValidationError } from "../../utils/types";
 
 /**
  * This function is a middleware that validates the user information in the request in order to log the user.
