@@ -24,18 +24,18 @@ export default async function userUpdateValidator(
 
   if (!req.body) {
     errors.body.push("can't be empty");
-    return res.status(422).json({ errors });
+    return res.status(400).json({ errors });
   }
 
   const { user } = req.body;
   if (!user) {
     errors.body.push("user property must exist");
-    return res.status(422).json({ errors });
+    return res.status(400).json({ errors });
   }
 
   if (typeof user != "object") {
     errors.body.push("user must be an object");
-    return res.status(422).json({ errors });
+    return res.status(400).json({ errors });
   }
 
   const optional_fields = ["email", "username", "password", "image", "bio"];
@@ -48,6 +48,6 @@ export default async function userUpdateValidator(
     }
   }
 
-  if (errors.body.length) return res.status(422).json({ errors });
+  if (errors.body.length) return res.status(400).json({ errors });
   next();
 }

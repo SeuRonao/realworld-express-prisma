@@ -21,13 +21,13 @@ export default async function userLoginValidator(
   errors.body = [];
   if (!req.body) {
     errors.body.push("can't be empty");
-    return res.status(422).json({ errors });
+    return res.status(400).json({ errors });
   }
 
   const { user } = req.body;
   if (!user) {
     errors.body.push("user object must be defined");
-    return res.status(422).json({ errors });
+    return res.status(400).json({ errors });
   }
 
   const { password, email } = user;
@@ -44,6 +44,6 @@ export default async function userLoginValidator(
     errors.body.push("email property in user must be a string");
   }
 
-  if (errors.body.length) return res.status(422).json({ errors });
+  if (errors.body.length) return res.status(400).json({ errors });
   next();
 }
