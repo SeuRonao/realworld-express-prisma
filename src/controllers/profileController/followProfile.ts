@@ -1,8 +1,8 @@
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { NextFunction, Response } from "express";
-import { Request as JWTRequest } from "express-jwt";
-import prisma from "../../utils/db/prisma";
-import logger from "../../utils/logger";
+import { Request } from "express-jwt";
+import userFollowProfilePrisma from "../../utils/db/userFollowProfilePrisma";
+import userGetPrisma from "../../utils/db/userGetPrisma";
+import profileViewer from "../../view/profileViewer";
 
 /**
  * Middleware that adds the username in the parameters to the current user followers list.
@@ -12,33 +12,25 @@ import logger from "../../utils/logger";
  * @returns
  */
 export default async function followProfile(
-  req: JWTRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ) {
-  logger.debug("Starting - followProfile");
   const username = req.params.username;
   const currentUsername = req.auth?.user.username;
-  if (!username)
-    return res
-      .status(422)
-      .json({ errors: { parameters: ["username can't be empty"] } });
+  let currentUser;
   try {
-    const followedUser = await prisma.user.update({
-      where: { username },
-      data: { followedBy: { connect: { username: currentUsername } } },
-    });
-    const responseBody = { ...followedUser, following: true };
-    return res.json(responseBody);
+    currentUser = await userGetPrisma(currentUsername);
   } catch (error) {
-    if (error instanceof PrismaClientKnownRequestError) {
-      switch (error.code) {
-        default:
-          logger.error(
-            `Unhandled PrismaClientKnownRequestError with code ${error.code} in followProfile`
-          );
-          return next(error);
-      }
-    }
+    return next(error);
   }
+  if (!currentUser) return res.sendStatus(401);
+  let profile;
+  try {
+    profile = await userFollowProfilePrisma(currentUser, username);
+  } catch (error) {
+    return next(error);
+  }
+  const profileView = profileViewer(profile, currentUser);
+  return res.json(profileView);
 }
