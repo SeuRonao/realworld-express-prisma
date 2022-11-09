@@ -25,10 +25,10 @@ export default async function articlesCreate(
   let currentUser;
   try {
     currentUser = await userGetPrisma(userName);
-    if (!currentUser) return res.sendStatus(401);
   } catch (error) {
     return next(error);
   }
+  if (!currentUser) return res.sendStatus(401);
 
   // Create list of tags
   let tags: Tag[] = [];
@@ -53,6 +53,6 @@ export default async function articlesCreate(
   }
 
   // Create article view
-  const articleView = articleViewer(article, currentUser || undefined);
+  const articleView = articleViewer(article, currentUser);
   return res.status(201).json(articleView);
 }
