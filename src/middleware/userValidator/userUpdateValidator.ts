@@ -1,6 +1,9 @@
 import { NextFunction, Response } from "express";
-import { Request as JWTRequest } from "express-jwt";
-import logger from "../../utils/logger";
+import { Request } from "express-jwt";
+
+interface ValidationError {
+  body?: Array<string>;
+}
 
 /**
  * This function is a middleware that validates the user information in the request in order to log the user.
@@ -12,42 +15,39 @@ import logger from "../../utils/logger";
  * @returns
  */
 export default async function userUpdateValidator(
-  req: JWTRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ) {
-  logger.debug("Starting - userUpdateValidator");
+  const errors: ValidationError = {};
+  errors.body = [];
+
   if (!req.body) {
-    logger.debug(`body is empty.`);
-    return res.status(422).json({ errors: { body: ["can't be empty"] } });
+    errors.body.push("can't be empty");
+    return res.status(422).json({ errors });
   }
-  const user = req.body.user;
+
+  const { user } = req.body;
   if (!user) {
-    logger.debug(`user not defined on the request.`);
-    return res
-      .status(422)
-      .json({ errors: { body: ["user property must exist"] } });
+    errors.body.push("user property must exist");
+    return res.status(422).json({ errors });
   }
+
   if (typeof user != "object") {
-    logger.debug(`user must be an object.`);
-    return res
-      .status(422)
-      .json({ errors: { body: ["user must be an object"] } });
+    errors.body.push("user must be an object");
+    return res.status(422).json({ errors });
   }
+
   const optional_fields = ["email", "username", "password", "image", "bio"];
-  const errors = [];
   for (const key of Object.keys(user)) {
     if (typeof key != "string" && key in optional_fields) {
-      logger.debug(`user field ${key} not of type string`);
-      errors.push(`${key} must be of type string`);
+      errors.body.push(`${key} must be of type string`);
     }
     if (!optional_fields.includes(key)) {
-      logger.debug(`user field ${key} not accepted`);
-      errors.push(`${key} is not one of the fields accepted`);
+      errors.body.push(`${key} is not one of the fields accepted`);
     }
   }
-  if (errors.length) {
-    return res.status(422).json({ errors: { body: errors } });
-  }
-  return next();
+
+  if (errors.body.length) return res.status(422).json({ errors });
+  next();
 }
