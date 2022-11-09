@@ -1,18 +1,7 @@
 import { Router } from "express";
-import {
-  articlesCreate,
-  articlesDelete,
-  articlesGet,
-  articlesUpdate,
-} from "../../controllers/articlesController";
-import {
-  articlesCreateValidator,
-  articlesUpdateValidator,
-} from "../../middleware/articlesValidator";
-import {
-  authenticate,
-  optionalAuthenticate,
-} from "../../middleware/auth/authenticator";
+import * as articles from "../../controllers/articlesController";
+import * as validator from "../../middleware/articlesValidator";
+import * as auth from "../../middleware/auth/authenticator";
 
 const router = Router();
 
@@ -24,13 +13,23 @@ router.get("/feed", function (_req, res) {
   res.sendStatus(501);
 });
 
-router.get("/:slug", optionalAuthenticate, articlesGet);
+router.get("/:slug", auth.optionalAuthenticate, articles.articlesGet);
 
-router.post("/", authenticate, articlesCreateValidator, articlesCreate);
+router.post(
+  "/",
+  auth.authenticate,
+  validator.articlesCreateValidator,
+  articles.articlesCreate
+);
 
-router.put("/:slug", authenticate, articlesUpdateValidator, articlesUpdate);
+router.put(
+  "/:slug",
+  auth.authenticate,
+  validator.articlesUpdateValidator,
+  articles.articlesUpdate
+);
 
-router.delete("/:slug", authenticate, articlesDelete);
+router.delete("/:slug", auth.authenticate, articles.articlesDelete);
 
 router.post("/:slug/comments", function (_req, res) {
   res.sendStatus(501);
