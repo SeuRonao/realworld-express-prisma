@@ -21,7 +21,7 @@ export default async function userGet(
   try {
     currentUser = await userGetPrisma(username);
   } catch (error) {
-    next(error);
+    return next(error);
   }
   if (!currentUser) return res.sendStatus(404);
   const token = createToken(JSON.stringify({ currentUser }));
