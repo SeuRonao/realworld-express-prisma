@@ -33,7 +33,6 @@ model Article {
   authorUsername String
   favoritedBy    User[]    @relation("Favorites")
   comments       Comment[] @relation("Comments")
-  commentId      Int
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @default(now())
 }
