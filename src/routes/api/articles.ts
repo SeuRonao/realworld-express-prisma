@@ -1,5 +1,6 @@
 import { Router } from "express";
 import * as articles from "../../controllers/articlesController";
+import * as comments from "../../controllers/commentsController";
 import * as validator from "../../middleware/articlesValidator";
 import * as auth from "../../middleware/auth/authenticator";
 
@@ -37,17 +38,11 @@ router.put(
 
 router.delete("/:slug", auth.authenticate, articles.articlesDelete);
 
-router.post("/:slug/comments", function (_req, res) {
-  res.sendStatus(501);
-});
+router.post("/:slug/comments", auth.authenticate, comments.createComment);
 
-router.get("/:slug/comments", function (_req, res) {
-  res.sendStatus(501);
-});
+router.get("/:slug/comments", auth.optionalAuthenticate, comments.getComments);
 
-router.delete("/:slug/comments/:id", function (_req, res) {
-  res.sendStatus(501);
-});
+router.delete("/:slug/comments/:id", auth.authenticate, comments.deleteComment);
 
 router.post("/:slug/favorite", auth.authenticate, articles.articlesFavorite);
 

@@ -20,19 +20,33 @@ model User {
   followedBy User[]    @relation("UserFollows") ///List of other users that follows this one.
   authored   Article[] @relation("Author")
   favorites  Article[] @relation("Favorites")
+  comment    Comment[] @relation("Author")
 }
 
 model Article {
-  title          String   @unique
-  slug           String   @id
+  title          String    @unique
+  slug           String    @id
   description    String
   body           String
   tagList        Tag[]
-  author         User     @relation("Author", fields: [authorUsername], references: [username])
+  author         User      @relation("Author", fields: [authorUsername], references: [username])
   authorUsername String
-  favoritedBy    User[]   @relation("Favorites")
+  favoritedBy    User[]    @relation("Favorites")
+  comments       Comment[] @relation("Comments")
+  commentId      Int
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @default(now())
+}
+
+model Comment {
+  id             Int      @id @default(autoincrement())
   createdAt      DateTime @default(now())
   updatedAt      DateTime @default(now())
+  body           String
+  author         User     @relation("Author", fields: [authorUsername], references: [username])
+  authorUsername String
+  Article        Article? @relation("Comments", fields: [articleSlug], references: [slug])
+  articleSlug    String?
 }
 
 model Tag {
