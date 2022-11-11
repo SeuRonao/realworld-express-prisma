@@ -26,6 +26,6 @@ export default async function deleteComment(
     const commentView = commentViewer(comment, currentUser);
     return res.json(commentView);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 }
