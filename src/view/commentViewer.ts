@@ -3,7 +3,7 @@ import profileViewer from "./profileViewer";
 
 export default function commentViewer(
   comment: Comment & { author: User & { followedBy: User[] } },
-  currentUser: User
+  currentUser?: User
 ) {
   const commentView = {
     id: comment.id,

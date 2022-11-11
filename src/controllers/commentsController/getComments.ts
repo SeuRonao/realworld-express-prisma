@@ -1,10 +1,30 @@
 import { NextFunction, Response } from "express";
 import { Request } from "express-jwt";
+import commentsGetPrisma from "../../utils/db/commentsGetPrisma";
+import userGetPrisma from "../../utils/db/userGetPrisma";
+import commentViewer from "../../view/commentViewer";
 
 export default async function getComments(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
-  res.sendStatus(501);
+  const slug = req.params.slug;
+  const username = req.auth?.user.username;
+
+  try {
+    // Get current user from database
+    const currentUser = await userGetPrisma(username);
+
+    // Get comments from database
+    const comments = await commentsGetPrisma(slug, currentUser || undefined);
+
+    // Create comment view
+    const commentsView = comments.map((comment) =>
+      commentViewer(comment, currentUser || undefined)
+    );
+    return res.json(commentsView);
+  } catch (error) {
+    return next(error);
+  }
 }
