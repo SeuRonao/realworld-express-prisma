@@ -48,7 +48,11 @@ router.post(
 
 router.get("/:slug/comments", auth.optionalAuthenticate, comments.getComments);
 
-router.delete("/:slug/comments/:id", auth.authenticate, comments.deleteComment);
+router.delete(
+  "/:slug/comments/:id([0-9]+)",
+  auth.authenticate,
+  comments.deleteComment
+);
 
 router.post("/:slug/favorite", auth.authenticate, articles.articlesFavorite);
 
