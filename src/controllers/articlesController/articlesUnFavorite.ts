@@ -1,7 +1,7 @@
 import { NextFunction, Response } from "express";
 import { Request } from "express-jwt";
-import articleUnFavoritePrisma from "../../utils/db/articleUnFavoritePrisma";
-import userGetPrisma from "../../utils/db/userGetPrisma";
+import articleUnFavoritePrisma from "../../utils/db/article/articleUnFavoritePrisma";
+import userGetPrisma from "../../utils/db/user/userGetPrisma";
 import articleViewer from "../../view/articleViewer";
 
 export default async function articlesUnFavorite(

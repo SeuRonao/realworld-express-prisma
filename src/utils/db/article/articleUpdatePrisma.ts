@@ -1,5 +1,5 @@
-import slugfy from "../slugfy";
-import prisma from "./prisma";
+import slugfy from "../../slugfy";
+import prisma from "../prisma";
 
 interface UpdateFields {
   title?: string;

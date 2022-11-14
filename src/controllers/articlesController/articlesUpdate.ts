@@ -1,7 +1,7 @@
 import { NextFunction, Response } from "express";
 import { Request } from "express-jwt";
-import { articleUpdatePrisma } from "../../utils/db";
-import userGetPrisma from "../../utils/db/userGetPrisma";
+import articleUpdatePrisma from "../../utils/db/article/articleUpdatePrisma";
+import userGetPrisma from "../../utils/db/user/userGetPrisma";
 import articleViewer from "../../view/articleViewer";
 
 export default async function articlesUpdate(

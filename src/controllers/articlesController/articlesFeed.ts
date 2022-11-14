@@ -1,9 +1,9 @@
-import { User, Article } from "@prisma/client";
+import { Article, Tag, User } from "@prisma/client";
 import { NextFunction, Response } from "express";
 import { Request } from "express-jwt";
 import { ParsedQs } from "qs";
-import articleFeedPrisma from "../../utils/db/articleFeedPrisma";
-import userGetPrisma from "../../utils/db/userGetPrisma";
+import articleFeedPrisma from "../../utils/db/article/articleFeedPrisma";
+import userGetPrisma from "../../utils/db/user/userGetPrisma";
 import articleViewer from "../../view/articleViewer";
 
 function parseQuery(query: ParsedQs) {
@@ -39,8 +39,14 @@ export default async function articlesFeed(
   }
 
   // Create articles feed view
-  const articlesFeedView = articles.map((article) =>
-    articleViewer(article, currentUser || undefined)
+  const articlesFeedView = articles.map(
+    (
+      article: Article & {
+        tagList: Tag[];
+        author: User & { followedBy: User[] };
+        _count: { favoritedBy: number };
+      }
+    ) => articleViewer(article, currentUser || undefined)
   );
 
   return res.json({ articles: articlesFeedView });

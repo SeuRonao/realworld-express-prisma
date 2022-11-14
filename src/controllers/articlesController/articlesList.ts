@@ -1,10 +1,10 @@
+import { Article, Tag, User } from "@prisma/client";
 import { NextFunction, Response } from "express";
 import { Request } from "express-jwt";
 import { ParsedQs } from "qs";
-import userGetPrisma from "../../utils/db/userGetPrisma";
-import articlesListPrisma from "../../utils/db/articleListPrisma";
+import articlesListPrisma from "../../utils/db/article/articleListPrisma";
+import userGetPrisma from "../../utils/db/user/userGetPrisma";
 import articleViewer from "../../view/articleViewer";
-import { User, Article } from "@prisma/client";
 
 function parseArticleListQuery(query: ParsedQs) {
   let { tag, author, favorited } = query;
@@ -43,8 +43,14 @@ export default async function articlesList(
     return next(error);
   }
   // Create articles view
-  const articlesListView = articles.map((value) =>
-    articleViewer(value, currentUser || undefined)
+  const articlesListView = articles.map(
+    (
+      value: Article & {
+        tagList: Tag[];
+        author: User & { followedBy: User[] };
+        _count: { favoritedBy: number };
+      }
+    ) => articleViewer(value, currentUser || undefined)
   );
   return res.json({
     articles: articlesListView,

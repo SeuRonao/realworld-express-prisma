@@ -1,6 +1,6 @@
 import { NextFunction, Response } from "express";
 import { Request as JWTRequest } from "express-jwt";
-import userGetPrisma from "../../utils/db/userGetPrisma";
+import userGetPrisma from "../../utils/db/user/userGetPrisma";
 import profileViewer from "../../view/profileViewer";
 
 /**

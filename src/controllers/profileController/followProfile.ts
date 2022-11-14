@@ -1,7 +1,7 @@
 import { NextFunction, Response } from "express";
 import { Request } from "express-jwt";
-import userFollowProfilePrisma from "../../utils/db/userFollowProfilePrisma";
-import userGetPrisma from "../../utils/db/userGetPrisma";
+import userFollowProfilePrisma from "../../utils/db/user/userFollowProfilePrisma";
+import userGetPrisma from "../../utils/db/user/userGetPrisma";
 import profileViewer from "../../view/profileViewer";
 
 /**

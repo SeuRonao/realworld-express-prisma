@@ -1,9 +1,9 @@
 import { Tag } from "@prisma/client";
 import { NextFunction, Response } from "express";
 import { Request as JWTRequest } from "express-jwt";
-import articleCreatePrisma from "../../utils/db/articleCreatePrisma";
-import tagsCreatePrisma from "../../utils/db/tagsCreatePrisma";
-import userGetPrisma from "../../utils/db/userGetPrisma";
+import articleCreatePrisma from "../../utils/db/article/articleCreatePrisma";
+import tagsCreatePrisma from "../../utils/db/tag/tagsCreatePrisma";
+import userGetPrisma from "../../utils/db/user/userGetPrisma";
 import articleViewer from "../../view/articleViewer";
 
 interface Article {

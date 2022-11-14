@@ -1,7 +1,7 @@
 import { NextFunction, Response } from "express";
 import { Request } from "express-jwt";
 import createUserToken from "../../utils/auth/createUserToken";
-import userUpdatePrisma from "../../utils/db/userUpdatePrisma";
+import userUpdatePrisma from "../../utils/db/user/userUpdatePrisma";
 import userViewer from "../../view/userViewer";
 
 /**

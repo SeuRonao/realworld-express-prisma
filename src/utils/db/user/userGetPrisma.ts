@@ -1,9 +1,9 @@
-import prisma from "./prisma";
+import prisma from "../prisma";
 
-export default async function userGetEmailPrisma(email: string) {
-  if (!email) return null;
+export default async function userGetPrisma(username: string) {
+  if (!username) return null;
   const user = await prisma.user.findUnique({
-    where: { email },
+    where: { username },
     include: {
       follows: true,
       followedBy: true,

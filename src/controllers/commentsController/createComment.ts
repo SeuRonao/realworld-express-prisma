@@ -1,7 +1,7 @@
 import { NextFunction, Response } from "express";
 import { Request } from "express-jwt";
-import commentCreatePrisma from "../../utils/db/commentCreatePrisma";
-import userGetPrisma from "../../utils/db/userGetPrisma";
+import commentCreatePrisma from "../../utils/db/comment/commentCreatePrisma";
+import userGetPrisma from "../../utils/db/user/userGetPrisma";
 import commentViewer from "../../view/commentViewer";
 
 export default async function createComment(

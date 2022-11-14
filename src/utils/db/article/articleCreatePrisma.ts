@@ -1,6 +1,6 @@
 import { Tag } from "@prisma/client";
-import prisma from "./prisma";
-import slugfy from "../slugfy";
+import prisma from "../prisma";
+import slugfy from "../../slugfy";
 
 interface RequiredFields {
   title: string;

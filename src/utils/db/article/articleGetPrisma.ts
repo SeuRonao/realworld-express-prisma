@@ -1,7 +1,7 @@
-import prisma from "./prisma";
+import prisma from "../prisma";
 
-export default async function articleDeletePrisma(slug: string) {
-  const article = await prisma.article.delete({
+export default async function articleGetPrisma(slug: string) {
+  const article = await prisma.article.findUnique({
     where: { slug },
     include: {
       author: { include: { followedBy: true } },

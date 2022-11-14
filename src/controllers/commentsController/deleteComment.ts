@@ -1,7 +1,7 @@
 import { NextFunction, Response } from "express";
 import { Request } from "express-jwt";
-import commentDeletePrisma from "../../utils/db/commentDeletePrisma";
-import userGetPrisma from "../../utils/db/userGetPrisma";
+import commentDeletePrisma from "../../utils/db/comment/commentDeletePrisma";
+import userGetPrisma from "../../utils/db/user/userGetPrisma";
 import commentViewer from "../../view/commentViewer";
 
 export default async function deleteComment(
