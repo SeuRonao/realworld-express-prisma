@@ -1,7 +1,7 @@
 import { NextFunction, Response } from "express";
 import { Request } from "express-jwt";
 
-export default async function commentCreateValidator(
+export default function commentCreateValidator(
   req: Request,
   res: Response,
   next: NextFunction
