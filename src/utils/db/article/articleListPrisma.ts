@@ -7,7 +7,6 @@ export default async function articlesListPrisma(
   limit = 20,
   offset = 0
 ) {
-  console.log(authorUsername);
   const articles = await prisma.article.findMany({
     where: {
       authorUsername,
