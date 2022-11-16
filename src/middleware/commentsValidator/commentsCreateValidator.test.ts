@@ -2,10 +2,10 @@ import { Response } from "express";
 import { Request } from "express-jwt";
 import commentCreateValidator from "./commentCreateValidator";
 
+// The mock response creation in order to reset mock calls
 function mockResponse() {
   const response = {
     status: jest.fn().mockReturnThis(),
-    sendStatus: jest.fn().mockReturnThis(),
     json: jest.fn().mockReturnThis(),
   };
   return response;
