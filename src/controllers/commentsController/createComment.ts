@@ -27,7 +27,7 @@ export default async function createComment(
 
     // Create comment view
     const commentView = commentViewer(comment, currentUser);
-    return res.json(commentView);
+    return res.status(201).json(commentView);
   } catch (error) {
     return next(error);
   }
