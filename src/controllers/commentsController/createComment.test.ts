@@ -5,21 +5,25 @@ import userGetPrisma from "../../utils/db/user/userGetPrisma";
 import commentCreatePrisma from "../../utils/db/comment/commentCreatePrisma";
 import commentViewer from "../../view/commentViewer";
 
+// Mocking the dependencies
 jest.mock("../../utils/db/user/userGetPrisma");
 jest.mock("../../utils/db/comment/commentCreatePrisma");
 jest.mock("../../view/commentViewer");
 
+// The dependencies mocked
 const mockedUserGetPrisma = jest.mocked(userGetPrisma);
 const mockedCommentCreatePrisma = jest.mocked(commentCreatePrisma);
 const mockedCommentViewer = jest.mocked(commentViewer);
 
-const mockRes = {
-  status: jest.fn().mockReturnThis(),
-  sendStatus: jest.fn().mockReturnThis(),
-  json: jest.fn().mockReturnThis(),
-};
-
-const next = jest.fn();
+// The mock response creation in order to reset mock calls
+function mockResponse() {
+  const response = {
+    status: jest.fn().mockReturnThis(),
+    sendStatus: jest.fn().mockReturnThis(),
+    json: jest.fn().mockReturnThis(),
+  };
+  return response;
+}
 
 const mockUser = {
   username: "test-user-username",
@@ -32,6 +36,7 @@ const mockUser = {
   authored: [],
   favorites: [],
 };
+
 const mockComment = {
   articleSlug: "test-slug",
   authorUsername: "test-user-username",
@@ -49,6 +54,7 @@ const mockView = {
   body: "test-comment-body",
   author: { ...mockUser, following: false },
 };
+mockedCommentViewer.mockReturnValue(mockView);
 
 describe("Create Comment Controller", function () {
   test("Success path", async function () {
@@ -65,9 +71,10 @@ describe("Create Comment Controller", function () {
         },
       },
     } as unknown as Request;
+    const mockRes = mockResponse();
+    const next = jest.fn();
     mockedUserGetPrisma.mockResolvedValueOnce(mockUser);
     mockedCommentCreatePrisma.mockResolvedValueOnce(mockComment);
-    mockedCommentViewer.mockReturnValue(mockView);
     await createComment(mockReq, mockRes as unknown as Response, next);
 
     expect(next).not.toHaveBeenCalled();
@@ -87,6 +94,8 @@ describe("Create Comment Controller", function () {
         user: { username: "test-user" },
       },
     } as unknown as Request;
+    const mockRes = mockResponse();
+    const next = jest.fn();
     mockedUserGetPrisma.mockResolvedValueOnce(null);
     await createComment(mockReq, mockRes as unknown as Response, next);
     expect(mockRes.sendStatus).toHaveBeenCalledWith(401);
@@ -103,9 +112,12 @@ describe("Create Comment Controller", function () {
         user: { username: "test-user" },
       },
     } as unknown as Request;
+    const mockRes = mockResponse();
+    const next = jest.fn();
+    const error = Error("this is an error that should go to next");
     mockedUserGetPrisma.mockResolvedValueOnce(mockUser);
-    mockedCommentCreatePrisma.mockRejectedValueOnce(Error("teste"));
+    mockedCommentCreatePrisma.mockRejectedValueOnce(error);
     await createComment(mockReq, mockRes as unknown as Response, next);
-    expect(next).toHaveBeenCalled();
+    expect(next).toHaveBeenCalledWith(error);
   });
 });
