@@ -13,14 +13,11 @@ const mockedUserGetPrisma = jest.mocked(userGetPrisma);
 const mockedCommentCreatePrisma = jest.mocked(commentCreatePrisma);
 const mockedCommentViewer = jest.mocked(commentViewer);
 
-function mockResponse() {
-  const res = {
-    status: jest.fn().mockReturnThis(),
-    sendStatus: jest.fn().mockReturnThis(),
-    json: jest.fn().mockReturnThis(),
-  };
-  return res;
-}
+const mockRes = {
+  status: jest.fn().mockReturnThis(),
+  sendStatus: jest.fn().mockReturnThis(),
+  json: jest.fn().mockReturnThis(),
+};
 
 const next = jest.fn();
 
@@ -68,16 +65,15 @@ describe("Create Comment Controller", function () {
         },
       },
     } as unknown as Request;
-    const res = mockResponse() as unknown as Response;
     mockedUserGetPrisma.mockResolvedValueOnce(mockUser);
     mockedCommentCreatePrisma.mockResolvedValueOnce(mockComment);
     mockedCommentViewer.mockReturnValue(mockView);
-    await createComment(mockReq, res, next);
+    await createComment(mockReq, mockRes as unknown as Response, next);
 
     expect(next).not.toHaveBeenCalled();
-    expect(res.sendStatus).not.toHaveBeenCalled();
-    expect(res.status).toHaveBeenCalledWith(201);
-    expect(res.json).toHaveBeenCalled();
+    expect(mockRes.sendStatus).not.toHaveBeenCalled();
+    expect(mockRes.status).toHaveBeenCalledWith(201);
+    expect(mockRes.json).toHaveBeenCalled();
   });
   test("User does not exist path", async function () {
     const mockReq = {
@@ -92,9 +88,8 @@ describe("Create Comment Controller", function () {
       },
     } as unknown as Request;
     mockedUserGetPrisma.mockResolvedValueOnce(null);
-    const res = mockResponse() as unknown as Response;
-    await createComment(mockReq, res, next);
-    expect(res.sendStatus).toHaveBeenCalledWith(401);
+    await createComment(mockReq, mockRes as unknown as Response, next);
+    expect(mockRes.sendStatus).toHaveBeenCalledWith(401);
   });
   test("Comment cannot be created", async function () {
     const mockReq = {
@@ -108,10 +103,9 @@ describe("Create Comment Controller", function () {
         user: { username: "test-user" },
       },
     } as unknown as Request;
-    const res = mockResponse() as unknown as Response;
     mockedUserGetPrisma.mockResolvedValueOnce(mockUser);
     mockedCommentCreatePrisma.mockRejectedValueOnce(Error("teste"));
-    await createComment(mockReq, res, next);
+    await createComment(mockReq, mockRes as unknown as Response, next);
     expect(next).toHaveBeenCalled();
   });
 });
