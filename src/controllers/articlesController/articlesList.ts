@@ -1,4 +1,3 @@
-import { Article, Tag, User } from "@prisma/client";
 import { NextFunction, Response } from "express";
 import { Request } from "express-jwt";
 import { ParsedQs } from "qs";
@@ -48,17 +47,8 @@ export default async function articlesList(
     );
 
     // Create articles view
-    const articlesListView = articles.map(
-      (
-        article: Article & {
-          tagList: Tag[];
-          author: User & { followedBy: User[] };
-          _count: { favoritedBy: number };
-        }
-      ) =>
-        currentUser
-          ? articleViewer(article, currentUser)
-          : articleViewer(article)
+    const articlesListView = articles.map((article) =>
+      currentUser ? articleViewer(article, currentUser) : articleViewer(article)
     );
 
     return res.json({

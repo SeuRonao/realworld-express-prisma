@@ -28,6 +28,7 @@ export default async function articlesUnFavorite(
     // UnFavorite the article
     const article = await articleUnFavoritePrisma(currentUser, slug);
     if (!article) return res.sendStatus(404);
+
     // Create article view
     const articleView = articleViewer(article, currentUser);
     return res.json(articleView);
