@@ -4,6 +4,15 @@ import articleUpdatePrisma from "../../utils/db/article/articleUpdatePrisma";
 import userGetPrisma from "../../utils/db/user/userGetPrisma";
 import articleViewer from "../../view/articleViewer";
 
+/**
+ * Article controller that must receive a request with an authenticated user.
+ * The parameters of the request must have a slug.
+ * The body of the request must have an article object with title, description and body.
+ * @param req Request with a jwt token verified
+ * @param res Response
+ * @param next NextFunction
+ * @returns void
+ */
 export default async function articlesUpdate(
   req: Request,
   res: Response,
@@ -11,30 +20,24 @@ export default async function articlesUpdate(
 ) {
   const slug = req.params.slug;
   const { title, description, body } = req.body.article;
-  const userName = req.auth?.user.username;
+  const userName = req.auth?.user?.username;
 
-  // Get current user
-  let currentUser;
   try {
-    currentUser = await userGetPrisma(userName);
-  } catch (error) {
-    return next(error);
-  }
-  if (!currentUser) return res.sendStatus(401);
+    // Get current user
+    const currentUser = await userGetPrisma(userName);
+    if (!currentUser) return res.sendStatus(401);
 
-  // Update the article
-  let article;
-  try {
-    article = await articleUpdatePrisma(slug, {
+    // Update the article
+    const article = await articleUpdatePrisma(slug, {
       title,
       description,
       body,
     });
+
+    // Create the article view
+    const articleView = articleViewer(article, currentUser);
+    return res.status(200).json(articleView);
   } catch (error) {
     return next(error);
   }
-
-  // Create the article view
-  const articleView = articleViewer(article, currentUser);
-  return res.status(200).json(articleView);
 }
