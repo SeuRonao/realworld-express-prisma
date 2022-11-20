@@ -25,35 +25,40 @@ export default async function articlesList(
   const { tag, author, favorited, limit, offset } = parseArticleListQuery(
     req.query
   );
-  const username = req.auth?.user.username;
+  const username = req.auth?.user?.username;
 
-  // Get current user
-  let currentUser: (User & { favorites: Article[] }) | null;
   try {
-    currentUser = await userGetPrisma(username);
+    // Get current user
+    const currentUser = await userGetPrisma(username);
+
+    // Get the articles
+    const articles = await articlesListPrisma(
+      tag,
+      author,
+      favorited,
+      limit,
+      offset
+    );
+
+    // Create articles view
+    const articlesListView = articles.map(
+      (
+        article: Article & {
+          tagList: Tag[];
+          author: User & { followedBy: User[] };
+          _count: { favoritedBy: number };
+        }
+      ) =>
+        currentUser
+          ? articleViewer(article, currentUser)
+          : articleViewer(article)
+    );
+
+    return res.json({
+      articles: articlesListView,
+      articlesCount: articlesListView.length,
+    });
   } catch (error) {
     return next(error);
   }
-
-  // Get the articles
-  let articles;
-  try {
-    articles = await articlesListPrisma(tag, author, favorited, limit, offset);
-  } catch (error) {
-    return next(error);
-  }
-  // Create articles view
-  const articlesListView = articles.map(
-    (
-      value: Article & {
-        tagList: Tag[];
-        author: User & { followedBy: User[] };
-        _count: { favoritedBy: number };
-      }
-    ) => articleViewer(value, currentUser || undefined)
-  );
-  return res.json({
-    articles: articlesListView,
-    articlesCount: articlesListView.length,
-  });
 }
