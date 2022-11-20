@@ -2,6 +2,13 @@ import { NextFunction, Response } from "express";
 import { Request } from "express-jwt";
 import { ValidationError } from "../../utils/types";
 
+/**
+ *
+ * @param req Request with optional authentication
+ * @param res Response
+ * @param next NextFunction
+ * @returns void
+ */
 export default async function articlesCreateValidator(
   req: Request,
   res: Response,
