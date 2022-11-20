@@ -5,27 +5,31 @@ import userGetPrisma from "../../utils/db/user/userGetPrisma";
 import userViewer from "../../view/userViewer";
 
 /**
- * Middleware that gets the current user based on the JWT given.
- * @param req Request
+ * User controller that gets the current user based on the JWT given.
+ * @param req Request with an authenticated user on the auth property.
  * @param res Response
  * @param next NextFunction
- * @returns
+ * @returns void
  */
 export default async function userGet(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
-  const username = req.auth?.user.username;
-  let currentUser;
+  const username = req.auth?.user?.username;
   try {
-    currentUser = await userGetPrisma(username);
+    // Get current user
+    const currentUser = await userGetPrisma(username);
+    if (!currentUser) return res.sendStatus(404);
+
+    // Create the authentication token
+    const token = createUserToken(currentUser);
+
+    // Create the user view with the authentication token
+    const response = userViewer(currentUser, token);
+
+    return res.json(response);
   } catch (error) {
     return next(error);
   }
-  if (!currentUser) return res.sendStatus(404);
-
-  const token = createUserToken(currentUser);
-  const response = userViewer(currentUser, token);
-  return res.json(response);
 }
