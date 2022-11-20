@@ -17,6 +17,15 @@ function parseArticleListQuery(query: ParsedQs) {
   return { tag, author, favorited, limit: limitNumber, offset: offsetNumber };
 }
 
+/**
+ * Article controller that must receive a request.
+ * The parameters of the request must have a slug.
+ * The body of the request must have an article object with title, description and body.
+ * @param req Request with an optional jwt token verified
+ * @param res Response
+ * @param next NextFunction
+ * @returns void
+ */
 export default async function articlesList(
   req: Request,
   res: Response,
