@@ -3,8 +3,8 @@ import { Request } from "express-jwt";
 import { ValidationError } from "../../utils/types";
 
 /**
- *
- * @param req Request with optional authentication
+ * Middleware to validate input for article creation controller.
+ * @param req Request
  * @param res Response
  * @param next NextFunction
  * @returns void
