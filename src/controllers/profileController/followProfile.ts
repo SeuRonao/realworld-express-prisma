@@ -5,11 +5,12 @@ import userGetPrisma from "../../utils/db/user/userGetPrisma";
 import profileViewer from "../../view/profileViewer";
 
 /**
- * Middleware that adds the username in the parameters to the current user followers list.
- * @param req Request
+ * Profile controller that adds the username in the parameters to the current user followers list.
+ * The parameters of the request must contain the username that will be followed by the authenticated user.
+ * @param req Request with authenticated user in the auth property.
  * @param res Response
  * @param next NextFunction
- * @returns
+ * @returns void
  */
 export default async function followProfile(
   req: Request,
@@ -17,20 +18,20 @@ export default async function followProfile(
   next: NextFunction
 ) {
   const username = req.params.username;
-  const currentUsername = req.auth?.user.username;
-  let currentUser;
+  const currentUsername = req.auth?.user?.username;
   try {
-    currentUser = await userGetPrisma(currentUsername);
+    // Get current user
+    const currentUser = await userGetPrisma(currentUsername);
+    if (!currentUser) return res.sendStatus(401);
+
+    // Get the user profile to follow
+    const profile = await userFollowProfilePrisma(currentUser, username);
+
+    // Create the profile view.
+    const profileView = profileViewer(profile, currentUser);
+
+    return res.json(profileView);
   } catch (error) {
     return next(error);
   }
-  if (!currentUser) return res.sendStatus(401);
-  let profile;
-  try {
-    profile = await userFollowProfilePrisma(currentUser, username);
-  } catch (error) {
-    return next(error);
-  }
-  const profileView = profileViewer(profile, currentUser);
-  return res.json(profileView);
 }

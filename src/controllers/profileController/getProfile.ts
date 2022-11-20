@@ -4,11 +4,12 @@ import userGetPrisma from "../../utils/db/user/userGetPrisma";
 import profileViewer from "../../view/profileViewer";
 
 /**
- * Middleware that takes the username in the parameters and returns its profile.
- * @param req Request
+ * Profile controller that takes the username in the parameters and returns its profile.
+ * With an optional authenticated user.
+ * @param req Request with an optional authenticated user.
  * @param res Response
  * @param next NextFunction
- * @returns
+ * @returns void
  */
 export default async function getProfile(
   req: JWTRequest,
@@ -16,24 +17,23 @@ export default async function getProfile(
   next: NextFunction
 ) {
   const { username } = req.params;
-  const currentUsername = req.auth?.user.username; // The current user's username
+  const currentUsername = req.auth?.user?.username; // The current user's username
 
-  let currentUser;
   try {
-    currentUser = await userGetPrisma(currentUsername);
+    // Get current user from database
+    const currentUser = await userGetPrisma(currentUsername);
+
+    // Get the desired profile
+    const profile = await userGetPrisma(username);
+    if (!profile) return res.sendStatus(404);
+
+    // Create the profile view
+    const profileView = currentUser
+      ? profileViewer(profile, currentUser)
+      : profileViewer(profile);
+
+    return res.json(profileView);
   } catch (error) {
     return next(error);
   }
-
-  let profile;
-  try {
-    profile = await userGetPrisma(username);
-  } catch (error) {
-    return next(error);
-  }
-  if (!profile) return res.sendStatus(404);
-
-  const profileView = profileViewer(profile, currentUser || undefined);
-
-  return res.json(profileView);
 }
