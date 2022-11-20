@@ -4,6 +4,15 @@ import commentCreatePrisma from "../../utils/db/comment/commentCreatePrisma";
 import userGetPrisma from "../../utils/db/user/userGetPrisma";
 import commentViewer from "../../view/commentViewer";
 
+/**
+ * Comment controller that must receive a request with an authenticated user.
+ * The parameters of the request must have a slug to the article the comment belongs to.
+ * The body of the request must have an comment object with a body string.
+ * @param req Request with a jwt token verified
+ * @param res Response
+ * @param next NextFunction
+ * @returns void
+ */
 export default async function createComment(
   req: Request,
   res: Response,
@@ -11,7 +20,7 @@ export default async function createComment(
 ) {
   const slug = req.params.slug;
   const { body: commentContent } = req.body.comment;
-  const username = req.auth?.user.username;
+  const username = req.auth?.user?.username;
 
   try {
     // Get currentUser

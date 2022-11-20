@@ -4,6 +4,14 @@ import commentDeletePrisma from "../../utils/db/comment/commentDeletePrisma";
 import userGetPrisma from "../../utils/db/user/userGetPrisma";
 import commentViewer from "../../view/commentViewer";
 
+/**
+ * Comment controller that must receive a request with an authenticated user.
+ * The parameters of the request must have a slug to the article the comment belongs to and the id of the comments that will be removed.
+ * @param req Request with a jwt token verified
+ * @param res Response
+ * @param next NextFunction
+ * @returns void
+ */
 export default async function deleteComment(
   req: Request,
   res: Response,
@@ -11,7 +19,7 @@ export default async function deleteComment(
 ) {
   const slug = req.params.slug;
   const id = parseInt(req.params.id);
-  const username = req.auth?.user.username;
+  const username = req.auth?.user?.username;
 
   try {
     // Get currentUser
