@@ -5,6 +5,7 @@
   "main": "dist/server.js",
   "scripts": {
     "build": "dotenv -e .env -- npx tsc",
+    "migrate:develop": "dotenv -e .env.development -- npx prisma db push",
     "develop": "DEBUG=express:* dotenv -e .env.development -- npx ts-node-dev --rs --clear --exit-child src/server.ts",
     "start": "dotenv -e .env -- node dist/server.js",
     "lint": "npx eslint .",

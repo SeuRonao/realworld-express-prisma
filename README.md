@@ -24,6 +24,15 @@ To run this project you should have _node/npm_ installed.
 
 Run `npm install` to install the dependencies.
 
+Create a development environment file `.env.development` inside the root folder with the following attributes:
+
+```
+DATABASE_URL=file:./dev.db
+JWT_SECRET=theSecretForCreatingTheJWT
+NODE_ENV=development
+```
+
+- To update the database in development mode use `npm run migrate:develop`
 - To run the development version `npm run develop`.
 - To test the application `npm test`.
 - To build a production version `npm run build`.
