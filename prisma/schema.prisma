@@ -29,7 +29,7 @@ model Article {
   description    String /// Description for SEO of this article.
   body           String /// The main content of the article.
   tagList        Tag[] /// List of tags associated with this article.
-  author         User      @relation("Author", fields: [authorUsername], references: [username]) /// User that is the author of this article.
+  author         User      @relation("Author", fields: [authorUsername], references: [username], onDelete: Cascade) /// User that is the author of this article.
   authorUsername String /// Username of the author of this article.
   favoritedBy    User[]    @relation("Favorites") /// List of users that have favorited this article.
   comments       Comment[] @relation("Comments") /// List of comments of this article.
@@ -42,9 +42,9 @@ model Comment {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @default(now())
   body           String /// The main content of the comment.
-  author         User     @relation("Author", fields: [authorUsername], references: [username]) /// User that is the author of this comment.
+  author         User     @relation("Author", fields: [authorUsername], references: [username], onDelete: Cascade) /// User that is the author of this comment.
   authorUsername String /// Username of the author of this comment.
-  Article        Article  @relation("Comments", fields: [articleSlug], references: [slug]) /// Article that this comment belongs to.
+  Article        Article  @relation("Comments", fields: [articleSlug], references: [slug], onDelete: Cascade) /// Article that this comment belongs to.
   articleSlug    String /// Article slug that this comment belongs to.
 }
 
