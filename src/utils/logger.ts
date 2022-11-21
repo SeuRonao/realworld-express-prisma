@@ -28,6 +28,12 @@ if (process.env.NODE_ENV !== "production") {
       level: "debug",
     })
   );
+  logger.add(
+    new winston.transports.File({
+      filename: "./logs/debug.log",
+      level: "debug",
+    })
+  );
 }
 
 export default logger;

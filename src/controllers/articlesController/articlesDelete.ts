@@ -30,7 +30,7 @@ export default async function articlesDelete(
 
     // Create the deleted article view
     const articleView = articleViewer(article, currentUser);
-    return res.status(200).json(articleView);
+    return res.status(200).json({ article: articleView });
   } catch (error) {
     return next(error);
   }

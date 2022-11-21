@@ -36,7 +36,7 @@ export default async function articlesUpdate(
 
     // Create the article view
     const articleView = articleViewer(article, currentUser);
-    return res.status(200).json(articleView);
+    return res.status(200).json({ article: articleView });
   } catch (error) {
     return next(error);
   }

@@ -32,7 +32,7 @@ export default async function deleteComment(
 
     // Create comment view
     const commentView = commentViewer(comment, currentUser);
-    return res.json(commentView);
+    return res.json({ comment: commentView });
   } catch (error) {
     return next(error);
   }

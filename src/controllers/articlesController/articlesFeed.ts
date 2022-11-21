@@ -40,7 +40,10 @@ export default async function articlesFeed(
       currentUser ? articleViewer(article, currentUser) : articleViewer(article)
     );
 
-    return res.json({ articles: articlesFeedView });
+    return res.json({
+      articles: articlesFeedView,
+      articlesCount: articlesFeedView.length,
+    });
   } catch (error) {
     return next(error);
   }

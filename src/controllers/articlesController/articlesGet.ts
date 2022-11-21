@@ -32,7 +32,7 @@ export default async function articlesGet(
     const articleView = currentUser
       ? articleViewer(article, currentUser)
       : articleViewer(article);
-    return res.status(200).json(articleView);
+    return res.status(200).json({ article: articleView });
   } catch (error) {
     return next(error);
   }

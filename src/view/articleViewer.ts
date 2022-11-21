@@ -11,8 +11,9 @@ export default function articleViewer(
   article: FullArticle,
   currentUser?: User & { favorites: Article[] }
 ) {
-  const favorited =
-    currentUser?.favorites.find((value) => value.slug == article.slug) && true;
+  const favorited = currentUser
+    ? currentUser.favorites.some((value) => value.slug === article.slug)
+    : false;
 
   const tagListView = article.tagList.map((tag) => tag.tagName);
 
@@ -26,7 +27,7 @@ export default function articleViewer(
     tagList: tagListView,
     createdAt: article.createdAt,
     updatedAt: article.updatedAt,
-    favorited: favorited ? true : false,
+    favorited: favorited,
     favoritesCount: article._count.favoritedBy,
     author: authorView,
   };

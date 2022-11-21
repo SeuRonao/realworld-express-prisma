@@ -49,7 +49,7 @@ export default async function articlesCreate(
 
     // Create article view
     const articleView = articleViewer(article, currentUser);
-    return res.status(201).json(articleView);
+    return res.status(201).json({ article: articleView });
   } catch (error) {
     return next(error);
   }

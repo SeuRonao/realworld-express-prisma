@@ -18,7 +18,7 @@ export default async function prismaErrorHandler(
 ) {
   if (!(err instanceof PrismaClientKnownRequestError)) return next(err);
 
-  logger.debug(`PrismaKnowRequestError with code ${err.code}`);
+  logger.debug(`treating PrismaKnowRequestError with code ${err.code}`);
   switch (err.code) {
     case "P2002":
       return res
