@@ -34,7 +34,7 @@ export default async function getComments(
       currentUser ? commentViewer(comment, currentUser) : commentViewer(comment)
     );
 
-    return res.json(commentsView);
+    return res.json({ comments: commentsView });
   } catch (error) {
     return next(error);
   }
