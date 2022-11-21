@@ -1,3 +1,8 @@
+/**
+ * Converts an input text to an uri safe string.
+ * @param text text to convert to a slug
+ * @returns the slug string
+ */
 export default function slugfy(text: string) {
   return text
     .normalize("NFD")

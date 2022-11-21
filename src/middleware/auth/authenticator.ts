@@ -8,6 +8,11 @@ if (!process.env.JWT_SECRET) {
   throw new Error("JWT_SECRET missing in environment.");
 }
 
+/**
+ * Function that receives a request with possibly an authorization token in the headers and returns this token.
+ * @param req Request
+ * @returns the token or undefined
+ */
 function getTokenInHeader(req: Request) {
   const authorization = req.headers.authorization;
   if (!authorization) return;

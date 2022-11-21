@@ -1,6 +1,15 @@
 import { NextFunction, Request, Response } from "express";
 import logger from "../../utils/logger";
 
+/**
+ * Middleware that handles general errors not handled by other middleware.
+ * The last line of defense against errors.
+ * @param err Error
+ * @param _req Request
+ * @param res Response
+ * @param _next NextFunction
+ * @returns
+ */
 export default function generalErrorHandler(
   err: Error,
   _req: Request,

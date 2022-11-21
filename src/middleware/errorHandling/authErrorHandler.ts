@@ -2,6 +2,14 @@ import { NextFunction, Request, Response } from "express";
 import { UnauthorizedError } from "express-jwt";
 import logger from "../../utils/logger";
 
+/**
+ * Middleware that handles authentication errors.
+ * @param err Error
+ * @param _req Request
+ * @param res Response
+ * @param next NextFunction
+ * @returns void
+ */
 export default async function authErrorHandler(
   err: Error,
   _req: Request,

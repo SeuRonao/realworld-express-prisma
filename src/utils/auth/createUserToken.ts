@@ -4,6 +4,11 @@ import jwt from "jsonwebtoken";
 
 dotenv.config();
 
+/**
+ * Creates a token containing the user information for future authorization.
+ * @param user User information to create the token
+ * @returns the token created
+ */
 export default function createUserToken(user: User) {
   if (!process.env.JWT_SECRET)
     throw new Error("JWT_SECRET missing in environment.");

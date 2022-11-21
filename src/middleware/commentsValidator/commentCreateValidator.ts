@@ -1,6 +1,13 @@
 import { NextFunction, Response } from "express";
 import { Request } from "express-jwt";
 
+/**
+ * Middleware that validates the properties of the request for the comment creation controller.
+ * @param req Request
+ * @param res Response
+ * @param next NextFunction
+ * @returns
+ */
 export default function commentCreateValidator(
   req: Request,
   res: Response,
