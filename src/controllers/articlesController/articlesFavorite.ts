@@ -22,16 +22,20 @@ export default async function articlesFavorite(
 
   try {
     // Get current user
-    const currentUser = await userGetPrisma(username);
+    let currentUser = await userGetPrisma(username);
     if (!currentUser) return res.sendStatus(401);
 
     // Favorite the article
     const article = await articleFavoritePrisma(currentUser, slug);
     if (!article) return res.sendStatus(404);
 
+    // Retrieve current user after update of its favorited articles
+    currentUser = await userGetPrisma(username);
+    if (!currentUser) return res.sendStatus(500); // The user should not have disappeared after having favorited an article
+
     // Create article view
     const articleView = articleViewer(article, currentUser);
-    return res.json(articleView);
+    return res.json({ article: articleView });
   } catch (error) {
     next(error);
   }
