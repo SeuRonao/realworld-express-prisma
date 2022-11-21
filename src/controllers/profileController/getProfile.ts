@@ -32,7 +32,7 @@ export default async function getProfile(
       ? profileViewer(profile, currentUser)
       : profileViewer(profile);
 
-    return res.json(profileView);
+    return res.json({ profile: profileView });
   } catch (error) {
     return next(error);
   }

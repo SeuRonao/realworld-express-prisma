@@ -29,7 +29,7 @@ export default async function unFollowProfile(
 
     // Create the profile view
     const profileView = profileViewer(profile, currentUser);
-    return res.json(profileView);
+    return res.json({ profile: profileView });
   } catch (error) {
     return next(error);
   }
