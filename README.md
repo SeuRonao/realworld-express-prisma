@@ -2,7 +2,7 @@
 
 > ### Typescript + Express + Prisma codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld) spec and API.
 
-### [Demo](https://seuronao.duckdns.org)&nbsp;&nbsp;&nbsp;&nbsp;[RealWorld](https://github.com/gothinkster/realworld)
+### [Demo](https://realworld.seuronao.duckdns.org)&nbsp;&nbsp;&nbsp;&nbsp;[RealWorld](https://github.com/gothinkster/realworld)
 
 This codebase was created to demonstrate a backend built with **Typescript + Express + Prisma** including CRUD operations, authentication, routing, pagination, and more.
 
@@ -14,7 +14,7 @@ For more information on how to this works with other frontends/backends, head ov
 
 The project is build using [TypeScript](https://www.typescriptlang.org/) for language, [Express](https://expressjs.com/) for routing and server framework and [Prisma](https://www.prisma.io/) as an _ORM_.
 
-For the moment the project uses [SQLite](https://www.sqlite.org/index.html) as database with plans to move to [PostgreSQL](https://www.postgresql.org/) when the api is ready.
+The project uses [PostgreSQL](https://www.postgresql.org/) for the database.
 
 For unit testing we use the [Jest](https://jestjs.io/) framework since it is what is promoted by prisma team to mock testing function that change the database.
 
