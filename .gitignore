@@ -39,3 +39,6 @@ logs/
 
 #Database
 prisma/dev.db
+
+#Coverage
+coverage/
